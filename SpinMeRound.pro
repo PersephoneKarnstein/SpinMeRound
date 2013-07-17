@@ -1,10 +1,9 @@
-
 pro spinmeround, data, x = x, y = y, z = z, ct = ct, rotx = rotx, roty = roty, rotz = rotz, slices = slices, nrots = nrots, delay = delay, theta = theta, norot = norot,  manual = manual, help = help ;user should pick a rotation axis and either an nrot and delay, or manual or norot
    if keyword_set(help) then begin
        print, "This procedure iterates the JENKY3D procedure (also included) while rotating the data represented around a specified axis*. As such, it includes all the options necessary to modify the 3D view (for which, you should look at the help file for JENKY3D, but they are as before: viewing axis /x, /y, and /z; color table ct; number of slices), as well as the axis around which to rotate the data, independent of the viewing axis, /rotx, /roty, and /rotz, and an option for no rotation /norot (in which case the program merely replicates JENKY3D); the number of rotations to perform nrot; the angle [in radians] by which to rotate the data each frame; the delay in tenths of a second for the program to wait after plotting each frame before plotting the next; and an option to controll the rotation by hand, by means of a 'desktop gaming-style' control interface. as shown below:"
        print, ""
-       print, "Rotation Direction:   <-   ->    ^  v     /  \"
-       print, "Key Command:           A   D     W  S     Q  E"
+       print, "Rotation Direction:   <-   ->    ^  v     /  \        -       +/=""
+       print, "Key Command:           A   D     W  S     Q  E    ZOOM OUT  ZOOM IN"
        print, ""
        print, "     * as mentioned in the write-up to JENKY3D, because of the limitations of the oplot function, this plots succesive layers of the out-of-screen axis twoard the viewer, from the back. While this may create a less noticable issue with smaller data sets, it caused a significant delay in tests involving of order 5000 datapoints, and so it is suggested that a noticable delay (or manual) is set for data of this magnitude, in order for the display to finish plotting and be viewed"
        print, ""
@@ -322,6 +321,12 @@ function ROTPAUSE, theta, xaxis = xaxis, yaxis = yaxis, zaxis = zaxis ;an extend
          if rp EQ 'Q' then begin
              rotationmatrix = [[1,0,0],[0, cos(theta), sin(theta)],[0, -sin(theta), cos(theta)]]
          endif
+         if rp EQ '=' then begin
+            rotationmatrix = [[1.5, 0, 0], [0, 1.5, 0], [0, 0, 1.5]]
+         endif
+         if rp EQ '-' then begin
+            rotationmatrix = [[1/1.5, 0, 0], [0, 1/1.5, 0], [0, 0, 1/1.5]]
+         endif
          return, rotationmatrix
      endif
 
@@ -344,6 +349,12 @@ function ROTPAUSE, theta, xaxis = xaxis, yaxis = yaxis, zaxis = zaxis ;an extend
          if rp EQ 'S' then begin
              rotationmatrix = [[cos(theta), 0, -sin(theta)],[0,1,0],[sin(theta), 0, cos(theta)]]
          endif
+         if rp EQ '=' then begin
+            rotationmatrix = [[1.5, 0, 0], [0, 1.5, 0], [0, 0, 1.5]]
+         endif
+         if rp EQ '-' then begin
+            rotationmatrix = [[1/1.5, 0, 0], [0, 1/1.5, 0], [0, 0, 1/1.5]]
+         endif
          return, rotationmatrix
      endif
 
@@ -365,6 +376,12 @@ function ROTPAUSE, theta, xaxis = xaxis, yaxis = yaxis, zaxis = zaxis ;an extend
          endif
          if rp EQ 'E' then begin
              rotationmatrix = [[cos(-theta), sin(-theta), 0],[-sin(-theta), cos(-theta), 0], [0,0,1]]
+         endif
+         if rp EQ '=' then begin
+            rotationmatrix = [[1.5, 0, 0], [0, 1.5, 0], [0, 0, 1.5]]
+         endif
+         if rp EQ '-' then begin
+            rotationmatrix = [[1/1.5, 0, 0], [0, 1/1.5, 0], [0, 0, 1/1.5]]
          endif
         ; print, rotationmatrix
         ; stop
